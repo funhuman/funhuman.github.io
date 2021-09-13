@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DES加密解密测试</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font: 14px/1.5 Arial, Microsoft Yahei, sans-serif;
+      color: #636b6f;
+    }
+    img {
+      border: 0;
+    }
+    a,
+    a:focus,
+    a:visited,
+    a:link,
+    a:hover,
+    a:active {
+      text-decoration: none;
+    }
+    .container-fluid.main {
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>DES</h1>
+    <p>本网页采用JavaScript技术实现DES加密解密，加密模式为ECB，填充模式为Pkcs7，输出格式为base64。</p>
+    <label for="text2" class="form-label">输入</label>
+    <textarea id="text2" class="form-control"></textarea>
+    <br>
+    <label for="key" class="form-label">Key</label>
+    <textarea id="key" class="form-control" value='12345678'>12345678</textarea>
+    <br>
+    <label for="text3" class="form-label">输出</label>
+    <a class="btn btn-sm btn-success" onclick="c();">切换至输入区</a>
+    <br>
+    <textarea id="text3" class="form-control"></textarea>
+    <br>
+    <button type="submit" class="btn btn-primary" onclick="encryptStr();">加密</button>
+    <button type="submit" class="btn btn-success" onclick="decryptStr();">解密</button>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.bootcss.com/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+  <script>
+    console.log("参考：https://www.cnblogs.com/happy-8090/p/13500534.html")
+  </script>
+  <script>
+    // DES加密
+    function encryptByDES(message, key) {
+      var keyHex = CryptoJS.enc.Utf8.parse(key);
+      var encrypted = CryptoJS.DES.encrypt(message, keyHex, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+      });
+      return encrypted.ciphertext.toString();
+    }
+    // DES解密
+    function decryptByDES(ciphertext, key) {
+      var keyHex = CryptoJS.enc.Utf8.parse(key);
+      var decrypted = CryptoJS.DES.decrypt({
+        ciphertext: CryptoJS.enc.Hex.parse(ciphertext)
+      }, keyHex, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+      });
+      var result_value = decrypted.toString(CryptoJS.enc.Utf8);
+      return result_value;
+    }
+  </script>
+  <script>
+    function c() {
+      document.getElementById('text2').value = document.getElementById('text3').value;
+      document.getElementById('text3').value = "";
+    }
+    function encryptStr() {
+      document.getElementById('text3').value = encryptByDES(
+        document.getElementById('text2').value,
+        document.getElementById('key').value
+      );
+    }
+    function decryptStr() {
+      document.getElementById('text3').value = decryptByDES(
+        document.getElementById('text2').value,
+        document.getElementById('key').value
+      );
+    }
+  </script>
+</body>
+
+</html>
