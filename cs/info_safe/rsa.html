@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSA加密解密测试</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font: 14px/1.5 Arial, Microsoft Yahei, sans-serif;
+      color: #636b6f;
+    }
+    img {
+      border: 0;
+    }
+    a,
+    a:focus,
+    a:visited,
+    a:link,
+    a:hover,
+    a:active {
+      text-decoration: none;
+    }
+    .container-fluid.main {
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>RSA</h1>
+    <p>RSA公开密钥密码体制是一种使用不同的加密密钥与解密密钥，“由已知加密密钥推导出解密密钥在计算上是不可行的”密码体制。</p>
+    <label for="area_private_key" class="form-label">私钥 Private Key</label>
+    <textarea id="area_private_key" class="form-control"></textarea>
+    <br>
+    <label for="area_public_key" class="form-label">公钥 Public Key</label>
+    <textarea id="area_public_key" class="form-control"></textarea>
+    <br>
+    <div class="col-md-4">
+      <div class="input-group mb-3">
+        <select id="select_key_size" class="form-select" width="25%">
+          <option value="512">512 bit</option>
+          <option value="1024" selected="">1024 bit</option>
+          <option value="2048">2048 bit</option>
+          <!-- <option value="4096">4096 bit</option> -->
+        </select>
+        <button type="submit" class="btn btn-outline-success" onclick="generateKey(this)">生成密钥</button>
+      </div>
+    </div>
+    <label for="area_input" class="form-label">输入</label>
+    <textarea id="area_input" class="form-control"></textarea>
+    <br>
+    <label for="area_output" class="form-label">输出</label>
+    <a class="btn btn-sm btn-outline-success" onclick="swapText();">切换至输入区</a>
+    <br>
+    <textarea id="area_output" class="form-control"></textarea>
+    <br>
+    <button type="submit" class="btn btn-primary" onclick="encrypt();">加密</button>
+    <button type="submit" class="btn btn-success" onclick="decrypt();">解密</button>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.bootcss.com/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+  <script>
+    console.log("参考：https://oktools.net/rsa");
+    function swapText() {document.getElementById('area_input').value = document.getElementById('area_output').value;document.getElementById('area_output').value = "";}
+    function generateKey(btn){if(btn){btn.stopPropatation=true;btn.cancelBubble=true;}
+    let keySize=parseInt(document.getElementById('select_key_size').value);let crypt=new JSEncrypt({default_key_size:keySize});if(btn)btn.innerText='正在生成...';new Promise(function(resolve){setTimeout(function(){resolve([crypt.getPrivateKey(),crypt.getPublicKey()]);},50);}).then(function(e){document.getElementById('area_private_key').value=e[0];document.getElementById('area_public_key').value=e[1];if(btn)btn.innerText='生成密钥';});}
+    function getCrypt(){let private_key=document.getElementById('area_private_key').value;let public_key=document.getElementById('area_public_key').value;if(private_key&&public_key){let crypt=new JSEncrypt();crypt.setPrivateKey(private_key);return crypt}}
+    function encrypt(){let cipher_text='';let original_text=document.getElementById('area_input').value;if(original_text){cipher_text=getCrypt().encrypt(original_text)||''}
+    document.getElementById('area_output').value=cipher_text}
+    function decrypt(){let original_text='';let cipher_text=document.getElementById('area_input').value;if(cipher_text){original_text=getCrypt().decrypt(cipher_text)||''}
+    document.getElementById('area_output').value=original_text}
+    generateKey();
+  </script>
+  <script src="/js/jsencrypt.min.js"></script>
+</body>
+</html>

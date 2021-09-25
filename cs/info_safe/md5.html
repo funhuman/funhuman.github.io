@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MD5加密测试</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font: 14px/1.5 Arial, Microsoft Yahei, sans-serif;
+      color: #636b6f;
+    }
+    img {
+      border: 0;
+    }
+    a,
+    a:focus,
+    a:visited,
+    a:link,
+    a:hover,
+    a:active {
+      text-decoration: none;
+    }
+    .container-fluid.main {
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MD5</h1>
+    <div class="form-floating">
+      <textarea class="form-control" id="input" placeholder="输入"></textarea>
+      <label for="floatinginput">输入</label>
+    </div>
+    <br>
+    <div class="col-md-4">
+      <div class="input-group mb-3">
+        <button type="submit" class="btn btn-outline-success" onclick="md5Hash()">MD5</button>
+        <input id="output" class="form-control" placeholder="输出">
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+  <script src="/js/jquery.md5.js"></script>
+  <script>
+    function md5Hash() {if ($('#input').val()) $('#output').val($.md5($('#input').val()))};
+  </script>
+</body>
+</html>
