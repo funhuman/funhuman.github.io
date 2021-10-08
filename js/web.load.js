@@ -19,13 +19,13 @@ let web_list = [
     },
     {
         title: "人生重开模拟器",
-        href: "https://convertio.co/zh/",
+        href: "http://liferestart.syaro.io/view/",
         slogan: "这垃圾人生一秒也不想呆了",
         kind_name: "娱乐",
     },
     {
         title: "文件转换器",
-        href: "http://liferestart.syaro.io/view/",
+        href: "https://convertio.co/zh/",
         slogan: "将您的文件转换成任意格式",
         kind_name: "工具",
     },
@@ -52,6 +52,30 @@ let web_list = [
         href: "https://zh.javascript.info/",
         slogan: "从基础到高阶的 JavaScript 相关知识",
         kind_name: "编程学习",
+    },
+    {
+        title: "便携小空调",
+        href: "https://ac.yunyoujun.cn/",
+        slogan: "为你的夏日带去清凉",
+        kind_name: "实用工具",
+    },
+    {
+        title: "地平线汽车展示",
+        href: "https://zu60.cn/",
+        slogan: "",
+        kind_name: "个人网站",
+    },
+    {
+        title: "ioDraw",
+        href: "https://www.iodraw.com/",
+        slogan: "免费在线画图，无需注册，支持流程图、思维导图、拓扑图、时序图、原型图、UML、平面设计图、电路图等",
+        kind_name: "工具",
+    },
+    {
+        title: "Windows 的键盘快捷方式",
+        href: "https://support.microsoft.com/zh-cn/windows/windows-%E7%9A%84%E9%94%AE%E7%9B%98%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
+        slogan: "",
+        kind_name: "工具",
     },
 ];
 web_list_html = '';
