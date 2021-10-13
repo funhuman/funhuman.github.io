@@ -15,7 +15,7 @@ let web_list = [
         title: "国家云网课",
         href: "https://ykt.eduyun.cn/",
         slogan: "国家中小学网络云平台",
-        kind_name: "",
+        kind_name: "学习",
     },
     {
         title: "人生重开模拟器",
@@ -61,14 +61,14 @@ let web_list = [
     },
     {
         title: "地平线汽车展示",
-        href: "https://zu60.cn/",
+        href: "http://zu60.cn/",
         slogan: "",
         kind_name: "个人网站",
     },
     {
         title: "ioDraw",
         href: "https://www.iodraw.com/",
-        slogan: "免费在线画图，无需注册，支持流程图、思维导图、拓扑图、时序图、原型图、UML、平面设计图、电路图等",
+        slogan: "免费在线画图，无需注册，支持流程图、思维导图、拓扑图、UML、平面设计图、电路图等",
         kind_name: "工具",
     },
     {
@@ -76,6 +76,18 @@ let web_list = [
         href: "https://support.microsoft.com/zh-cn/windows/windows-%E7%9A%84%E9%94%AE%E7%9B%98%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F-dcc61a57-8ff0-cffe-9796-cb9706c75eec",
         slogan: "",
         kind_name: "工具",
+    },
+    {
+        title: "wikiHow",
+        href: "https://zh.wikihow.com/%E9%A6%96%E9%A1%B5",
+        slogan: "互联网上最值得信赖的指南网站",
+        kind_name: "工具",
+    },
+    {
+        title: "国家哲学社会科学文献中心",
+        href: "http://www.ncpssd.org/",
+        slogan: "[需要注册] 社会科学类期刊文论资源库",
+        kind_name: "资源",
     },
 ];
 web_list_html = '';
