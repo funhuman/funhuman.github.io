@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Test</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+  <style>*{margin:0;padding:0}body{font:14px/1.5 Arial,Microsoft Yahei,sans-serif;color:#636b6f}img{border:0}a,a:focus,a:visited,a:link,a:hover,a:active{text-decoration:none;}.container-fluid.main{padding:0}.time-box {position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 420px;}#time{font-family:'Nunito',sans-serif;font-weight:400;font-size:6rem;letter-spacing:0.4rem}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center">Calc Price</h1>
+    <div class="form-floating">
+      <input class="form-control" id="input-a-price" placeholder="A 的价格" onkeyup="change()">
+      <label for="floatinginput">A 的价格</label>
+    </div>
+    <br />
+    <div class="form-floating">
+      <input class="form-control" id="input-a-weight" placeholder="A 的重量" onkeyup="change()">
+      <label for="floatinginput">A 的重量</label>
+    </div>
+    <br />
+    <div class="form-floating">
+      <input class="form-control" id="input-b-price" placeholder="B 的价格" onkeyup="change()">
+      <label for="floatinginput">B 的价格</label>
+    </div>
+    <br />
+    <div class="form-floating">
+      <input class="form-control" id="input-b-weight" placeholder="B 的重量" onkeyup="change()" readonly>
+      <label for="floatinginput">B 的重量</label>
+    </div>
+    <br />
+    <div class="text-center">
+      <input id="mode" type="button" class="btn btn-outline-success" value="重量模式" onclick="selectmode()">
+      &nbsp;
+      <input type="button" class="btn btn-outline-warning" value="清空" onclick="deleteAll()">
+    </div>
+  </div>
+  <script>
+    let mode = false;
+    let iap=document.getElementById('input-a-price');
+    let iaw=document.getElementById('input-a-weight');
+    let ibp=document.getElementById('input-b-price');
+    let ibw=document.getElementById('input-b-weight');
+    let modeButton = document.getElementById('mode');
+    function selectmode() {
+      if (mode)
+      {
+        mode = false;
+        modeButton.value = "重量模式";
+        ibp.removeAttribute("readonly");
+        ibw.setAttribute("readonly", "readonly");
+      }
+      else
+      {
+        mode = true;
+        modeButton.value = "价格模式";
+        ibp.setAttribute("readonly", "readonly");
+        ibw.removeAttribute("readonly");
+      }
+      ibp.value = ibw.value = '';
+    };
+    function change() {
+      iap.value = parseFloat(iap.value).toFixed(2);
+      if (mode)
+      {
+        ibp.value = (iap.value * ibw.value / iaw.value).toFixed(2);
+      }
+      else
+      {
+        ibw.value = iaw.value * ibp.value / iap.value;
+        ibp.value = parseFloat(iap.value).toFixed(2);
+      }
+    }
+    function deleteAll() {
+      iap.value = iaw.value = ibp.value = ibw.value = '';
+    }
+  </script>
+</body>
+</html>
