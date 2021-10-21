@@ -60,15 +60,15 @@ let web_list = [
         kind_name: "实用工具",
     },
     {
-        title: "地平线汽车展示",
-        href: "http://zu60.cn/",
+        title: "动态壁纸网页",
+        href: "https://zu60.cn/",
         slogan: "",
         kind_name: "个人网站",
     },
     {
         title: "ioDraw",
         href: "https://www.iodraw.com/",
-        slogan: "免费在线画图，无需注册，支持流程图、思维导图、拓扑图、UML、平面设计图、电路图等",
+        slogan: "免费在线画图，无需注册，流程图、思维导图、拓扑图等",
         kind_name: "工具",
     },
     {
@@ -88,6 +88,18 @@ let web_list = [
         href: "http://www.ncpssd.org/",
         slogan: "[需要注册] 社会科学类期刊文论资源库",
         kind_name: "资源",
+    },
+    {
+        title:     "HelloGithub",
+        href:      "https://hellogithub.com/",
+        slogan:    "分享 GitHub 上有趣、入门级的开源项目",
+        kind_name: "编程学习",
+    },
+    {
+        title:     "国家哲学社会科学文献中心",
+        href:      "https://hellogithub.com/",
+        slogan:    "分享 GitHub 上有趣、入门级的开源项目",
+        kind_name: "编程学习",
     },
 ];
 web_list_html = '';
