@@ -49,35 +49,34 @@
     function selectmode() {
       if (mode)
       {
-        mode = false;
         modeButton.value = "重量模式";
         ibp.removeAttribute("readonly");
         ibw.setAttribute("readonly", "readonly");
       }
       else
       {
-        mode = true;
         modeButton.value = "价格模式";
         ibp.setAttribute("readonly", "readonly");
         ibw.removeAttribute("readonly");
       }
+      mode = !mode;
       ibp.value = ibw.value = '';
     };
     function change() {
-      iap.value = parseFloat(iap.value).toFixed(2);
+      if (isEmpty(iap.value) || isEmpty(iaw.value)) return;
       if (mode)
       {
-        ibp.value = (iap.value * ibw.value / iaw.value).toFixed(2);
+        if (isEmpty(ibw.value)) return;
+        ibp.value = iap.value * ibw.value / iaw.value;
       }
       else
       {
+        if (isEmpty(ibp.value)) return;
         ibw.value = iaw.value * ibp.value / iap.value;
-        ibp.value = parseFloat(ibp.value).toFixed(2);
       }
     }
-    function deleteAll() {
-      iap.value = iaw.value = ibp.value = ibw.value = '';
-    }
+    function deleteAll(){iap.value = iaw.value = ibp.value = ibw.value = '';}
+    function isEmpty(v){switch(typeof v){case'undefined':return true;case'string':if(v.replace(/(^[ \t\n\r]*)|([ \t\n\r]*$)/g,'').length==0)return true;break;case'boolean':if(!v)return true;break;case'number':if(0===v||isNaN(v))return true;break;case'object':if(null===v||v.length===0)return true;for(var i in v){return false}return true}return false}
   </script>
 </body>
 </html>
