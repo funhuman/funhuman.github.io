@@ -90,17 +90,35 @@ let web_list = [
         kind_name: "资源",
     },
     {
-        title:     "HelloGithub",
+        title:     "Hello Github",
         href:      "https://hellogithub.com/",
         slogan:    "分享 GitHub 上有趣、入门级的开源项目",
         kind_name: "编程学习",
     },
     {
-        title:     "国家哲学社会科学文献中心",
-        href:      "https://hellogithub.com/",
-        slogan:    "分享 GitHub 上有趣、入门级的开源项目",
-        kind_name: "编程学习",
+        title:     "智能法律咨询",
+        href:      "https://ai.12348.gov.cn/pc/",
+        slogan:    "根据问卷提示填写相关信息，在线为您免费出具法律意见书，供您参考",
+        kind_name: "工具",
     },
+    {
+        title:     "标准地图服务",
+        href:      "http://bzdt.ch.mnr.gov.cn/",
+        slogan:    "使用标准地图时需要标注审图号",
+        kind_name: "工具",
+    },
+    {
+        title:     "花火数图Hanabi",
+        href:      "https://hanabi.data-viz.cn/index?lang=zh-CN",
+        slogan:    "[需要注册] 在线数据可视化工具",
+        kind_name: "工具",
+    },
+    //{
+    //    title:     "",
+    //    href:      "",
+    //    slogan:    "",
+    //    kind_name: "",
+    //},
 ];
 web_list_html = '';
 web_list.forEach(function (t) { web_list_html += `<div class="col-lg-3 col-md-4 col-xs-12"><div class="card"><a href="${t.href}" target="_blank"><div class="card-body"><h4 class="card-title">${t.title}</h4><p>${t.slogan}<span class="float-right">${t.kind_name}</span></p></a></div></div></div></div></div>` });
