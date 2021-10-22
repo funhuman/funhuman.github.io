@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>设计模拟器</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+  <style>*{margin:0;padding:0}body{font:14px/1.5 Arial,Microsoft Yahei,sans-serif;color:#636b6f}img{border:0}a,a:focus,a:visited,a:link,a:hover,a:active{text-decoration:none;}.container-fluid.main{padding:0}.time-box {position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 420px;}#time{font-family:'Nunito',sans-serif;font-weight:400;font-size:6rem;letter-spacing:0.4rem}.price{font-size: 18px;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center">设计模拟器</h1>
+    <div class="form-floating">
+      <input class="form-control" id="title" placeholder="标题">
+      <label for="floatinginput">标题</label>
+    </div>
+    <br />
+    <div class="input-group">
+      <input type="file" class="form-control" id="image" aria-describedby="image" aria-label="Upload">
+    </div>
+    <br />
+    <div class="form-floating">
+      <input class="form-control" id="price" placeholder="价格">
+      <label for="floatinginput">价格</label>
+    </div>
+    <br />
+    <div class="form-floating">
+        <input class="form-control" id="btntext" placeholder="按钮文字">
+        <label for="floatinginput">按钮文字</label>
+      </div>
+      <br />
+    <div class="text-center">
+      <input id="mode" type="button" class="btn btn-outline-success" value="开始" onclick="design()">
+      &nbsp;
+      <input type="button" class="btn btn-outline-warning" value="清空" onclick="deleteAll()">
+    </div>
+    <br /><br /><br /><br /><br />
+    <div class="text-center">
+        <h2 id="newtitle" class="text-center"></h2>
+        <br />
+        <img id="newimage" src="" width="400px" height="400px" hidden />
+        <br /><br />
+        <p id="newprice" class="text-center price"></p>
+        <input id="newbtn" class="btn btn-success" value="" type="button" hidden></input>
+    </div>
+  </div>
+  <script>
+    let mode = false;
+    let t=document.getElementById('title');
+    let img=document.getElementById('image');
+    let p=document.getElementById('price');
+    let nt=document.getElementById('newtitle');
+    let newimg=document.getElementById('newimage');
+    let np=document.getElementById('newprice');
+    let bt=document.getElementById('btntext');
+    let newbtn=document.getElementById('newbtn');
+    function design() {
+        nt.innerHTML = t.value;
+        np.innerHTML = p.value;
+        if (!isEmpty(bt.value)) { newbtn.value=bt.value; newbtn.removeAttribute('hidden');} else {newbtn.setAttribute('hidden', 'hidden');}
+        let file = img.files[0];
+        let url = window.URL.createObjectURL(file);
+        newimg.setAttribute('src', url);
+        if (!isEmpty(url)) {newimg.removeAttribute('hidden');} else{ newimg.setAttribute('hidden', 'hidden');}
+    };
+    function deleteAll(){t.value = img.value = p.value = bt.value = ''}
+    function isEmpty(v){switch(typeof v){case'undefined':return true;case'string':if(v.replace(/(^[ \t\n\r]*)|([ \t\n\r]*$)/g,'').length==0)return true;break;case'boolean':if(!v)return true;break;case'number':if(0===v||isNaN(v))return true;break;case'object':if(null===v||v.length===0)return true;for(var i in v){return false}return true}return false}
+  </script>
+</body>
+</html>
