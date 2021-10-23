@@ -18,13 +18,18 @@
       <label for="floatinginput">标题</label>
     </div>
     <br />
+    <div class="form-floating">
+      <input class="form-control" id="title2" placeholder="副标题">
+      <label for="floatinginput">副标题</label>
+    </div>
+    <br />
     <div class="input-group">
       <input type="file" class="form-control" id="image" aria-describedby="image" aria-label="Upload">
     </div>
     <br />
     <div class="form-floating">
       <input class="form-control" id="price" placeholder="价格">
-      <label for="floatinginput">价格</label>
+      <label for="floatinginput">说明文字</label>
     </div>
     <br />
     <div class="form-floating">
@@ -37,19 +42,21 @@
       &nbsp;
       <input type="button" class="btn btn-outline-warning" value="清空" onclick="deleteAll()">
     </div>
-    <br /><br /><br /><br /><br />
+    <br /><br /><br /><br />
     <div class="text-center">
-        <h2 id="newtitle" class="text-center"></h2>
+        <h2 id="newtitle"></h2>
         <br />
+        <h4 id="newtitle2"></h4>
         <img id="newimage" src="" width="400px" height="400px" hidden />
         <br /><br />
-        <p id="newprice" class="text-center price"></p>
+        <p id="newprice" class="price"></p>
         <input id="newbtn" class="btn btn-success" value="" type="button" hidden></input>
     </div>
   </div>
   <script>
     let mode = false;
     let t=document.getElementById('title');
+    let t2=document.getElementById('title2');
     let img=document.getElementById('image');
     let p=document.getElementById('price');
     let nt=document.getElementById('newtitle');
@@ -57,9 +64,11 @@
     let np=document.getElementById('newprice');
     let bt=document.getElementById('btntext');
     let newbtn=document.getElementById('newbtn');
+    let nt2=document.getElementById('newtitle2');
     function design() {
         nt.innerHTML = t.value;
         np.innerHTML = p.value;
+        nt2.innerHTML = t2.value;
         if (!isEmpty(bt.value)) { newbtn.value=bt.value; newbtn.removeAttribute('hidden');} else {newbtn.setAttribute('hidden', 'hidden');}
         let file = img.files[0];
         let url = window.URL.createObjectURL(file);
