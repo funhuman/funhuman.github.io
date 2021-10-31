@@ -14,9 +14,7 @@
   <div class="time-box text-center">
       <span id="time"></span>
   </div>
-  <script>
-    // 效果 11:24:01
-    function timemove(){var b=new Date();var h=b.getHours();var m=b.getMinutes();var s=b.getSeconds();var c=b.getDay();var d=fn(h)+":"+fn(m)+":"+fn(s);function fn(a){a<10?a="0"+a:a;return a}document.getElementById("time").innerText=d}timemove();setInterval(timemove,1000);
+  <script>function timemove(){var b=new Date();var h=b.getHours();var m=b.getMinutes();var s=b.getSeconds();var c=b.getDay();var d=fn(h)+":"+fn(m)+":"+fn(s);function fn(a){a<10?a="0"+a:a;return a}document.getElementById("time").innerText=d}timemove();setInterval(timemove,1000);document.oncontextmenu=new Function('event.returnValue=false;');document.onselectstart=new Function('event.returnValue=false;');
   </script>
 </body>
 </html>

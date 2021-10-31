@@ -7,7 +7,7 @@
   <title>funhuman 小站</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-  <style>*{margin:0;padding:0}body{font:14px/1.5 Arial,Microsoft Yahei,sans-serif;color:#636b6f}img{border:0}a,a:focus,a:visited,a:link,a:hover,a:active{text-decoration:none}.container-fluid.main{padding:0}.main-text{font-family:'Nunito',sans-serif;font-weight:400;font-size:3rem;letter-spacing:0.1rem}.bg{background:url('images/bg.jpg') no-repeat;height:100%;width:100%;background-size:cover;position:absolute;overflow:hidden}.h-80vh{height:80vh}.btn-fh{background-color:#8ec5fc;border:0;color:#fff}.btn-fh:hover{background-image:linear-gradient(120deg,#a1c4fd 0%,#c2e9fb 100%);border:0;color:#fff}.text-white-50 a,.text-white-50 a:focus,.text-white-50 a:visited,.text-white-50 a:link,.text-white-50 a:hover,.text-white-50 a:active{color:rgb(166,180,185)}.black-and-white{-webkit-filter:grayscale(100%);-moz-filter:grayscale(100%);-ms-filter:grayscale(100%);-o-filter:grayscale(100%);filter:grayscale(100%);-webkit-filter:grey;filter:gray}
+  <style>*{margin:0;padding:0}body{font:14px/1.5 Arial,Microsoft Yahei,sans-serif;color:#636b6f}img{border:0}a,a:focus,a:visited,a:link,a:hover,a:active{text-decoration:none}.container-fluid.main{padding:0}.main-text{font-family:'Nunito',sans-serif;font-weight:400;font-size:3rem;letter-spacing:0.1rem}.bg{background:url('images/bg.jpg') no-repeat;height:100%;width:100%;background-size:cover;position:absolute;overflow:hidden}.h-80vh{height:80vh}.btn-fh{background-color:#8ec5fc;border:0;color:#fff}.btn-fh:hover{background-image:linear-gradient(120deg,#a1c4fd 0%,#c2e9fb 100%);border:0;color:#fff}.text-white-50 a,.text-white-50 a:focus,.text-white-50 a:visited,.text-white-50 a:link,.text-white-50 a:hover,.text-white-50 a:active{color:rgb(166,180,185)}.black-and-white{-webkit-filter:grayscale(100%);-moz-filter:grayscale(100%);-ms-filter:grayscale(100%);-o-filter:grayscale(100%);filter:grayscale(100%);-webkit-filter:grey;filter:gray}#cetcalc{font-family:'Nunito',sans-serif;font-weight:400;font-size:2rem;letter-spacing:0.2rem}
   </style>
 </head>
 <body>
@@ -19,6 +19,7 @@
           <div class="title-heading">
             <div class="row"></div>
             <h2 class="heading text-white mb-3 main-text">Hello, world</h2>
+            <p class="text-white-50 para-desc mx-auto mb-0">距离CET还有 <span id='cetcalc'></span>天</p>
             <p class="text-white-50 para-desc mx-auto mb-0">网站持续更新中……</p>
             <p class="text-white-50 para-desc mx-auto mb-0">
               <a href="https://github.com/funhuman/funhuman.github.io">帮助更新</a>
@@ -59,6 +60,13 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <script>
     console.log("背景图片来自 https://www.pexels.com/zh-cn/photo/2232917/")
+    cd()
+    function cd() {
+      let date = new Date();
+      let cet4day = new Date(2021,12,18);
+      let days = parseInt((cet4day - date) / (24*60*60*1000)) - 30;
+      document.getElementById("cetcalc").innerHTML = days > 0?days:0;
+    }
   </script>
 </body>
 </html>
