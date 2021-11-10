@@ -5,6 +5,8 @@ let web_list=[{title:"LKs - 良心网站推荐",href:"https://xiangjianan.github
 {title:"OI Wiki",href:"https://oi-wiki.org/",slogan:"免费开放且持续更新的编程竞赛知识整合站点",kind_name:"编程学习",},
 {title:"编程导航",href:"https://www.code-nav.cn/resources",slogan:"",kind_name:"编程学习",},
 {title:"CS-Notes",href:"https://www.cyc2018.xyz/",slogan:"",kind_name:"编程学习",},
+{title:"CMD5",href:"https://cmd5.com/",slogan:"md5解密",kind_name:"编程学习",},
+{title:"随机二次元图片",href:"https://iw233.cn/api/Random.php",slogan:"",kind_name:"娱乐",},
 ];
 web_list_html='';
 web_list.forEach(function (t) { web_list_html += `<div class="col-lg-3 col-md-4 col-xs-12"><div class="card"><a href="${t.href}" target="_blank"><div class="card-body"><h4 class="card-title">${t.title}</h4><p>${t.slogan}<span class="float-right">${t.kind_name}</span></p></a></div></div></div></div></div>` });
