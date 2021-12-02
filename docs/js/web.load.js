@@ -10,6 +10,8 @@ let web_list=[{title:"LKs - 良心网站推荐",href:"https://xiangjianan.github
 {title:"鼠标键盘测试工具网",href:"https://cps-check.com/cn/",slogan:"丰富的测试工具",kind_name:"工具",},
 {title:"0.30000000000000004",href:"https://0.30000000000000004.com/",slogan:"Floating Point Math",kind_name:"娱乐",},
 {title:"某樱花的图片生成",href:"http://to-a.ru/",slogan:"某樱花的图片生成 - 某科学的超电磁炮",kind_name:"图片生成器",},
+{title:"万词王",href:"https://wantwords.thunlp.org/",slogan:"清华大学自然语言处理实验室出品的反向词典系统",kind_name:"工具",},
+{title:"城镇叠叠乐",href:"http://oskarstalberg.com/Townscaper/",slogan:"Townscaper Web Demo",kind_name:"游戏",},
 ];
 web_list_html='';
 web_list.forEach(function (t) { web_list_html += `<div class="col-lg-3 col-md-4 col-xs-12"><div class="card"><a href="${t.href}" target="_blank"><div class="card-body"><h4 class="card-title">${t.title}</h4><p>${t.slogan}<span class="float-right">${t.kind_name}</span></p></a></div></div></div></div></div>` });
