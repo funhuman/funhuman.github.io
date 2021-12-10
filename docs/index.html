@@ -62,8 +62,12 @@
     function cd() {
       let date = new Date();
       let cet4day = new Date(2021,12,18);
+      let NationalMemorialDay = new Date(date.getFullYear(),12,13);
       let days = parseInt((cet4day - date) / (24*60*60*1000)) - 30;
-      document.getElementById("cetcalc").innerHTML = days > 0?days:0;
+      document.getElementById("cetcalc").innerHTML = days > 0 ? days : 0;
+      let main = document.getElementById('main');
+      if (Math.abs((date - NationalMemorialDay) / (24*60*60*1000) + 30) < 1)
+      {main.className += ' black-and-white';}
     }
   </script>
 </body>
