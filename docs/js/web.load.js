@@ -15,7 +15,9 @@ let web_list=[{title:"LKs - 良心网站推荐",href:"https://xiangjianan.github
 {title:"电脑博物馆",href:"https://www.compumuseum.com/",slogan:"",kind_name:"",},
 {title:"文章生成器",href:"https://suulnnka.github.io/BullshitGenerator/index.html",slogan:"",kind_name:"",},
 {title:"微信对话生成器",href:"https://www.zjietu.com/wx.html",slogan:"",kind_name:"",},
-{title:"Neat Reader 在线阅读器",href:"https://www.neat-reader.cn/webapp#/",slogan:"",kind_name:"",},
+{title:"文本转语音",href:"https://azure.microsoft.com/zh-cn/services/cognitive-services/text-to-speech/",slogan:"Microsoft Azure",kind_name:"",},
+{title:"全历史",href:"https://www.allhistory.com/",slogan:"",kind_name:"",},
+{title:"Mastergo",href:"https://mastergo.com/",slogan:"在线产品原型图设计、网页设计、产品交互设计工具",kind_name:"工具",},
 ];
 web_list_html='';
 web_list.forEach(function (t) { web_list_html += `<div class="col-lg-3 col-md-4 col-xs-12"><div class="card"><a href="${t.href}" target="_blank"><div class="card-body"><h4 class="card-title">${t.title}</h4><p>${t.slogan}<span class="float-right">${t.kind_name}</span></p></a></div></div></div></div></div>` });
