@@ -18,6 +18,7 @@ let web_list=[{title:"LKs - 良心网站推荐",href:"https://xiangjianan.github
 {title:"文本转语音",href:"https://azure.microsoft.com/zh-cn/services/cognitive-services/text-to-speech/",slogan:"Microsoft Azure",kind_name:"",},
 {title:"全历史",href:"https://www.allhistory.com/",slogan:"",kind_name:"",},
 {title:"Mastergo",href:"https://mastergo.com/",slogan:"在线产品原型图设计、网页设计、产品交互设计工具",kind_name:"工具",},
+{title:"国家智慧教育平台",href:"https://www.smartedu.cn/",slogan:"",kind_name:"学习",}
 ];
 web_list_html='';
 web_list.forEach(function (t) { web_list_html += `<div class="col-lg-3 col-md-4 col-xs-12"><div class="card"><a href="${t.href}" target="_blank"><div class="card-body"><h4 class="card-title">${t.title}</h4><p>${t.slogan}<span class="float-right">${t.kind_name}</span></p></a></div></div></div></div></div>` });
