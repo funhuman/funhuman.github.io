@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MD5加密测试</title>
+  <title>MD5加密</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <style>
     * {
@@ -35,13 +35,13 @@
   <div class="container">
     <h1>MD5</h1>
     <div class="form-floating">
-      <textarea class="form-control" id="input" placeholder="输入"></textarea>
+      <textarea class="form-control" id="input" placeholder="输入" onkeyup="inputChange()"></textarea>
       <label for="floatinginput">输入</label>
     </div>
     <br>
-    <div class="col-md-4">
+    <div class="">
       <div class="input-group mb-3">
-        <button type="submit" class="btn btn-outline-success" onclick="md5Hash()">MD5</button>
+        <button id="btn" type="submit" class="btn btn-outline-success" onclick="modeChange()">MD5</button>
         <input id="output" class="form-control" placeholder="输出">
       </div>
     </div>
@@ -50,7 +50,10 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
   <script src="/js/jquery.md5.js"></script>
   <script>
-    function md5Hash() {if ($('#input').val()) $('#output').val($.md5($('#input').val()))};
+    function md5Hash() {$('#output').val($.md5($('#input').val()))};
+    function MD5Hash() {$('#output').val($.md5($('#input').val()).toUpperCase())};
+    function inputChange() { ($('#btn').text() == "MD5") ? MD5Hash() : md5Hash(); }
+    function modeChange() {($('#btn').text() == "MD5") ? $('#btn').text('md5') : $('#btn').text('MD5'); inputChange();}
   </script>
 </body>
 </html>
