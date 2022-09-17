@@ -63,10 +63,11 @@
       let today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
       let cet4day = new Date(2022,6,11);
       let NationalMemorialDay = new Date(today.getFullYear(),12,13);
+      let Sep18Day = new Date(today.getFullYear(),9,18);
       let days = datediff(today, cet4day);
       document.getElementById("cetcalc").innerHTML = days > 0 ? days : 0;
       let main = document.getElementById('main');
-      if (datediff(today, NationalMemorialDay) < 1){main.className += ' black-and-white';}
+      if (datediff(today, NationalMemorialDay) < 1 || datediff(today, Sep18Day) < 1) {main.className += ' black-and-white';}
     }
   </script>
 </body>
