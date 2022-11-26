@@ -24,7 +24,7 @@
     </div>
     <div class="input-group mt-3">
       <textarea class="form-control" id="input"
-        placeholder="输入 VS Code 的地址，例如：&#13;&#10;C:\\Program Files\\Microsoft VS Code\\Code.exe"></textarea>
+        placeholder='输入 Code.exe 的路径，例如：&#13;&#10;C:\Program Files\Microsoft VS Code\Code.exe&#13;&#10;"C:\Program Files\Microsoft VS Code\Code.exe"'></textarea>
     </div>
     <div class="input-group mt-3">
       <input id="inputInfo" class="form-control" placeholder="输入提示文字">
@@ -44,7 +44,7 @@
       inputInfo.value = lang === 'en' ? 'Open with VS Code' : lang === 'cn' ? '通过 VS Code 打开' : ''
     }
     function generate() {
-      let filePath = ipt.value.replace(/\\/g, '\\\\');
+      let filePath = ipt.value.replace(/"/g, '').replace(/\\/g, '\\\\');
       let promptText = inputInfo.value;
       let regInfoStr = 'Windows Registry Editor Version 5.00' + '\r\n\r\n'
       let fileStr = '' +

@@ -74,8 +74,12 @@
         checkWarn('字典中字符不能相同！')
         return 0
       }
+      inputProcessing()
       warn.setAttribute('hidden', 'hidden')
       return 1
+    }
+    function inputProcessing() {
+      ipt.value.replace(/\ +/g, "").replace(/[\r\n]/g, "");
     }
     function encodeClick() {
       if (!inputCheck()) { return }
