@@ -31,6 +31,7 @@
       <button class="btn btn-outline-secondary" onclick="defaultInfo('cn')">默认提示文字</button>
       <button class="btn btn-outline-secondary" onclick="defaultInfo('en')">Default Info Text</button>
       <button class="btn btn-outline-primary" onclick="generateClick()">生成</button>
+      <button class="btn btn-outline-primary" onclick="copyClick()">复制结果</button>
     </div>
     <div class="form-floating mt-3">
       <textarea class="form-control" id="output" placeholder="输出"></textarea>
@@ -40,6 +41,7 @@
   <script>
     let ipt = document.getElementById('input');
     let inputInfo = document.getElementById('inputInfo');
+    let opt = document.getElementById('output');
     function defaultInfo(lang) {
       inputInfo.value = lang === 'en' ? 'Open with VS Code' : lang === 'cn' ? '通过 VS Code 打开' : ''
     }
@@ -66,12 +68,10 @@
         '@="' + promptText + '"' + '\r\n' +
         '"Icon"="' + filePath + '"' + '\r\n' +
         '[HKEY_CLASSES_ROOT\\Directory\\Background\\shell\\VSCode\\command]' + '\r\n' +
-        '@="\\"' + filePath + '\\" \\"%V\\""' + '\r\n' +
-        '\r\n';
+        '@="\\"' + filePath + '\\" \\"%V\\""' + '\r\n';
       return generatedStr = regInfoStr + fileStr + directoryStr + directoryBackgroundStr;
     }
     function generateClick() {
-      let opt = document.getElementById('output');
       if (ipt.value == "" || inputInfo.value == "") {
         let warn = document.getElementById('warn');
         let warnstr = document.getElementById('warnstr');
@@ -81,6 +81,38 @@
       }
       warn.setAttribute('hidden', 'hidden')
       opt.value = generate()
+    }
+    function copyToClip(content, message=null) {
+      let aux = document.createElement("input");
+      aux.setAttribute("value", content);
+      document.body.appendChild(aux);
+      aux.select();
+      document.execCommand("copy");
+      document.body.removeChild(aux);
+      if (message != null) {
+        alert(message);
+      }
+    }
+    function copyArrayToClip(contentArray, message) {
+      var contents = "";
+      for (var i = 0; i < contentArray.length - 1; i++) {
+        contents += contentArray[i] + "\n";
+      }
+      contents += contentArray[contentArray.length - 1]
+      const textarea = document.createElement('textarea');
+      textarea.value = contents;
+      document.body.appendChild(textarea);
+      textarea.select();
+      if (document.execCommand('copy')) {
+        document.execCommand('copy');
+      }
+      document.body.removeChild(textarea);
+        if (message != null) {
+          alert(message);
+        }
+    }
+    function copyClick() {
+      copyArrayToClip(generate().split('\n'))
     }
   </script>
 </body>
