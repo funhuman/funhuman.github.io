@@ -59,15 +59,12 @@
     console.log("背景图片来自 https://www.pexels.com/zh-cn/photo/2232917/")
     cd()
     function cd() {
-      let datediff = (day1, day2) => parseInt(Math.abs((day1 - day2) / (24*60*60*1000) + 30));
+      let datediff = (day1, day2) => Math.ceil((day2 - day1) / (24 * 60 * 60 * 1000));
       let today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
       let date = (year, month, day) => new Date(year, month - 1, day);
       let targetday = date(2025, 1, 28);
-      let NationalMemorialDay = new Date(today.getFullYear(),12,13);
-      let days = datediff(today, targetday);
-      document.getElementById("targetdaycalc").innerHTML = days > 0 ? days : 0;
-      let main = document.getElementById('main');
-      if (datediff(today, NationalMemorialDay) < 1){main.className += ' black-and-white';}
+      let days = datediff(today, targetday) > 0 ? datediff(today, targetday) : 0;
+      document.getElementById("targetdaycalc").innerHTML = days;
     }
   </script>
 </body>
