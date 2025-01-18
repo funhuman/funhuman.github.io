@@ -6,15 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Countdown</title>
     <style>
-        /* .bg {
-            background: url(images/bg.jpg) no-repeat;
-            height: 100%;
-            width: 100%;
-            background-size: cover;
-            position: absolute;
-            overflow: hidden;
-        } */
-
         * {
             margin: 0;
             padding: 0;
@@ -105,6 +96,8 @@
             let today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
             let date = (year, month, day) => new Date(year, month - 1, day);
             let targetday = date(2025, 1, 28);
+            let nextTargetday = date(2026, 2, 16);
+            targetday = datediff(today, targetday) >= 0 ? targetday:  nextTargetday;
             let days = datediff(today, targetday) > 0 ? datediff(today, targetday) : 0;
             document.getElementById("zh-cn-number").innerHTML =
             document.getElementById("en-us-number").innerHTML = days;
