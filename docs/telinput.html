@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>整蛊电话号码控件</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f3f4f6;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 300px;
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 8px;
+      margin-top: 10px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .slider-container {
+      display: flex;
+      align-items: center;
+      margin-top: 15px;
+      justify-content: center;
+    }
+    button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      margin: 0 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    input[type="range"] {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <label><strong>电话号码</strong></label>
+      <input v-model="phoneNumber" maxlength="11" type="text" @input="sanitizePhoneNumber" >
+      <div class="slider-container">
+        <button @click="decreaseNumber">-</button>
+        <input type="range" min="10000000000" max="19999999999" v-model="sliderValue" @input="updatePhoneNumber">
+        <button @click="increaseNumber">+</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          phoneNumber: '10000000000',
+          sliderValue: 10000000000,
+        };
+      },
+      methods: {
+        sanitizePhoneNumber() {
+          this.sliderValue = this.phoneNumber = this.phoneNumber.replace(/[^0-9+]/g, '');
+        },
+        updatePhoneNumber() {
+          this.phoneNumber = this.sliderValue.toString();
+        },
+        increaseNumber() {
+          this.sliderValue = Math.min(19999999999, Number(this.sliderValue) + 1);
+          this.updatePhoneNumber();
+        },
+        decreaseNumber() {
+          this.sliderValue = Math.max(10000000000, Number(this.sliderValue) - 1);
+          this.updatePhoneNumber();
+        },
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
