@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Price Comparator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center p-4">
+
+<!-- Mode Buttons -->
+<div class="flex space-x-4 mb-4">
+  <button id="compareBtn" class="btn-mode bg-blue-500 text-white px-4 py-2 rounded">Compare</button>
+  <button id="priceBtn" class="btn-mode bg-gray-200 text-gray-700 px-4 py-2 rounded">Price Mode</button>
+  <button id="weightBtn" class="btn-mode bg-gray-200 text-gray-700 px-4 py-2 rounded">Weight Mode</button>
+</div>
+
+<!-- Inputs -->
+<div id="inputsContainer" class="bg-white shadow-md rounded-lg p-4 w-full max-w-xl">
+  <!-- Inputs dynamically rendered here -->
+</div>
+
+<!-- Result -->
+<div id="resultCard" class="bg-white shadow-md rounded-lg p-4 mt-6 w-full max-w-xl min-h-[48px] text-center text-lg font-semibold whitespace-pre-line"></div>
+
+<!-- Add new item -->
+<button onclick="addNewItem()" class="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">+ Add Item</button>
+
+<script>
+  const allLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  let items = {
+    A: { price: null, weight: null },
+    B: { price: null, weight: null },
+  };
+
+  let currentMode = 'compare';
+
+  const inputsContainer = document.getElementById('inputsContainer');
+  const resultCard = document.getElementById('resultCard');
+
+  const compareBtn = document.getElementById('compareBtn');
+  const priceBtn = document.getElementById('priceBtn');
+  const weightBtn = document.getElementById('weightBtn');
+
+  function setMode(mode) {
+    currentMode = mode;
+    updateModeUI();
+    updateReadOnlyStates();
+    update();
+  }
+
+  function updateModeUI() {
+    [compareBtn, priceBtn, weightBtn].forEach(btn => {
+      btn.classList.remove('bg-blue-500', 'text-white');
+      btn.classList.add('bg-gray-200', 'text-gray-700');
+    });
+    if (currentMode === 'compare') {
+      compareBtn.classList.add('bg-blue-500', 'text-white');
+      compareBtn.classList.remove('bg-gray-200', 'text-gray-700');
+    } else if (currentMode === 'price') {
+      priceBtn.classList.add('bg-blue-500', 'text-white');
+      priceBtn.classList.remove('bg-gray-200', 'text-gray-700');
+    } else if (currentMode === 'weight') {
+      weightBtn.classList.add('bg-blue-500', 'text-white');
+      weightBtn.classList.remove('bg-gray-200', 'text-gray-700');
+    }
+  }
+
+  function updateReadOnlyStates() {
+    for (const key in items) {
+      const priceInput = document.getElementById(key.toLowerCase() + 'Price');
+      const weightInput = document.getElementById(key.toLowerCase() + 'Weight');
+
+      if (currentMode === 'compare') {
+        priceInput.readOnly = false;
+        priceInput.classList.remove('bg-gray-100');
+        weightInput.readOnly = false;
+        weightInput.classList.remove('bg-gray-100');
+      } else if (currentMode === 'price') {
+        if (key === 'A') {
+          priceInput.readOnly = false;
+          priceInput.classList.remove('bg-gray-100');
+          weightInput.readOnly = false;
+          weightInput.classList.remove('bg-gray-100');
+        } else {
+          priceInput.readOnly = false;
+          priceInput.classList.remove('bg-gray-100');
+          weightInput.readOnly = true;
+          weightInput.classList.add('bg-gray-100');
+        }
+      } else if (currentMode === 'weight') {
+        if (key === 'A') {
+          priceInput.readOnly = false;
+          priceInput.classList.remove('bg-gray-100');
+          weightInput.readOnly = false;
+          weightInput.classList.remove('bg-gray-100');
+        } else {
+          weightInput.readOnly = false;
+          weightInput.classList.remove('bg-gray-100');
+          priceInput.readOnly = true;
+          priceInput.classList.add('bg-gray-100');
+        }
+      }
+    }
+  }
+
+  function renderInputs() {
+    inputsContainer.innerHTML = '';
+    for (const key of Object.keys(items)) {
+      const item = items[key];
+      const div = document.createElement('div');
+      div.className = 'mb-4 flex items-center space-x-4 p-4 border rounded shadow-sm relative';
+
+      // Add delete button for C and onwards
+      let deleteBtnHTML = '';
+      if (key >= 'C') {
+        deleteBtnHTML = `
+          <button title="Delete item ${key}"
+            class="absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold text-xl"
+            onclick="deleteItem('${key}')">&times;</button>`;
+      }
+
+      div.innerHTML = `
+        <div class="w-6 font-bold">${key}</div>
+        <div class="flex-1">
+          <input type="number" min="0" step="any" id="${key.toLowerCase()}Price" placeholder="Price"
+            class="w-full p-2 border rounded" value="${item.price ?? ''}" />
+        </div>
+        <div class="flex-1">
+          <input type="number" min="0" step="any" id="${key.toLowerCase()}Weight" placeholder="Weight"
+            class="w-full p-2 border rounded" value="${item.weight ?? ''}" />
+        </div>
+        ${deleteBtnHTML}
+      `;
+
+      inputsContainer.appendChild(div);
+
+      const priceInput = div.querySelector(`#${key.toLowerCase()}Price`);
+      const weightInput = div.querySelector(`#${key.toLowerCase()}Weight`);
+
+      priceInput.oninput = e => {
+        const val = parseFloat(e.target.value);
+        items[key].price = isNaN(val) ? null : val;
+        update();
+      };
+
+      weightInput.oninput = e => {
+        const val = parseFloat(e.target.value);
+        items[key].weight = isNaN(val) ? null : val;
+        update();
+      };
+    }
+  }
+
+  function deleteItem(key) {
+    delete items[key];
+    renderInputs();
+    updateReadOnlyStates();
+    update();
+  }
+
+  function update() {
+    if (!currentMode) {
+      resultCard.textContent = '';
+      return;
+    }
+
+    const A = items['A'];
+    if (A.price == null || A.weight == null || A.weight === 0) {
+      resultCard.textContent = currentMode === 'compare' ? 'Please enter valid price and weight for A' : '';
+      return;
+    }
+
+    if (currentMode === 'compare') {
+      const unitA = A.price / A.weight;
+      const resultArr = [];
+
+      for (const key of Object.keys(items)) {
+        const item = items[key];
+        if (item.price != null && item.weight != null && item.weight !== 0) {
+          const unitPrice = item.price / item.weight;
+          resultArr.push({ key, unitPrice, valid: true });
+        } else {
+          resultArr.push({ key, unitPrice: Infinity, valid: false });
+        }
+      }
+
+      resultArr.sort((a, b) => {
+        if (a.valid && b.valid) return a.unitPrice - b.unitPrice;
+        if (a.valid) return -1;
+        if (b.valid) return 1;
+        return 0;
+      });
+
+      const lines = resultArr.map(({ key, unitPrice, valid }) => {
+        if (!valid) return `${key}: Invalid data`;
+        if (unitPrice < unitA) return `${key}: Cheaper (Unit Price: ${unitPrice.toFixed(3)})`;
+        if (unitPrice > unitA) return `${key}: More expensive (Unit Price: ${unitPrice.toFixed(3)})`;
+        return `${key}: Same unit price (${unitPrice.toFixed(3)})`;
+      });
+
+      resultCard.textContent = lines.join('\n');
+    } else if (currentMode === 'price') {
+      for (const key of Object.keys(items)) {
+        if (key === 'A') continue;
+        const item = items[key];
+        if (item.price != null && item.price !== 0) {
+          item.weight = (A.price * A.weight) / item.price;
+          const weightInput = document.getElementById(key.toLowerCase() + 'Weight');
+          weightInput.value = item.weight.toFixed(3);
+        }
+      }
+      resultCard.textContent = '';
+    } else if (currentMode === 'weight') {
+      for (const key of Object.keys(items)) {
+        if (key === 'A') continue;
+        const item = items[key];
+        if (item.weight != null && item.weight !== 0) {
+          item.price = (A.price * A.weight) / item.weight;
+          const priceInput = document.getElementById(key.toLowerCase() + 'Price');
+          priceInput.value = item.price.toFixed(3);
+        }
+      }
+      resultCard.textContent = '';
+    }
+  }
+
+  function addNewItem() {
+    const keys = Object.keys(items);
+    if (keys.length >= 26) return; // limit to Z
+    let nextLetter = allLetters.find(l => !keys.includes(l));
+    if (!nextLetter) return;
+    items[nextLetter] = { price: null, weight: null };
+    renderInputs();
+    updateReadOnlyStates();
+    update();
+  }
+
+  // Attach event listeners to mode buttons
+  compareBtn.onclick = () => setMode('compare');
+  priceBtn.onclick = () => setMode('price');
+  weightBtn.onclick = () => setMode('weight');
+
+  // Initialize UI
+  renderInputs();
+  setMode('compare');
+</script>
+
+</body>
+</html>
