@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>涂色示例</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --selected-bg-color: #C6E0B4;
+      --selected-text-color: #000000;
+    }
+
+    .selected-cell {
+      background-color: var(--selected-bg-color) !important;
+      color: var(--selected-text-color) !important;
+      cursor: pointer;
+    }
+
+    td.selectable:hover:not(.selected-cell) {
+      background-color: #e5e7eb;
+      cursor: pointer;
+    }
+
+    .title-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex gap-4 mb-6 items-center">
+      <label class="flex items-center gap-2">
+        背景色：
+        <input type="color" id="bg-color-picker" value="#C6E0B4" />
+      </label>
+      <label class="flex items-center gap-2">
+        文字色：
+        <input type="color" id="text-color-picker" value="#000000" />
+      </label>
+      <button id="reset-colors" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">重置颜色</button>
+      <button id="clear-selection" class="px-3 py-1 bg-red-400 text-white rounded hover:bg-red-500">清空选择</button>
+      <button id="screenshot-btn" class="ml-auto px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">下载截图</button>
+    </div>
+
+    <div id="table-container" class="bg-white p-4 rounded shadow">
+      <div id="table-title" class="title-wrapper">
+        <div class="text-2xl font-bold" id="title-main"></div>
+        <div class="title-right" id="title-stats"></div>
+      </div>
+      <table id="data-table" class="w-full border-collapse"></table>
+    </div>
+  </div>
+
+  <script>
+    const dataRows = [
+      [
+        { value: "水果1", selectable: false },
+        { value: "苹果", selectable: true, w: 2 },
+        { value: "50", selectable: true }
+      ],
+      [
+        { value: "水果2", selectable: false },
+        { value: "香蕉", selectable: true },
+        { value: "30", selectable: true, w: 3 }
+      ],
+      [
+        { value: "水果3", selectable: false },
+        { value: "梨", selectable: true },
+        { value: "25", selectable: true }
+      ]
+    ];
+
+    const tableData = {
+      title: "涂色游戏示例",
+      title2: "选中了",
+      title3: "项水果",
+      headers: ["类型", "名称", "价格"],
+      rows: dataRows
+    };
+
+    let selectedBgColor = "#C6E0B4";
+    let selectedTextColor = "#000000";
+
+    function renderTable() {
+      const container = document.getElementById('data-table');
+      container.innerHTML = '';
+
+      // 设置标题
+      const titleMain = document.getElementById('title-main');
+      const titleStats = document.getElementById('title-stats');
+      titleMain.textContent = tableData.title || '';
+      titleStats.textContent = ''; // 初始为空，由监听逻辑更新
+
+      // 渲染表头
+      if (tableData.headers?.length) {
+        const thead = container.createTHead();
+        const row = thead.insertRow();
+        tableData.headers.forEach(h => {
+          const th = document.createElement('th');
+          th.textContent = h;
+          th.className = 'border px-4 py-2 bg-gray-300 font-semibold text-lg break-words whitespace-normal';
+          row.appendChild(th);
+        });
+      }
+
+      const tbody = container.tBodies[0] || container.appendChild(document.createElement('tbody'));
+      tbody.innerHTML = '';
+      tableData.rows.forEach((r, rowIndex) => {
+        const tr = tbody.insertRow();
+        r.forEach((c, colIndex) => {
+          const td = tr.insertCell();
+          td.textContent = c.value;
+          td.className = 'border px-4 py-2 break-words whitespace-normal';
+          if (c.selectable) {
+            td.classList.add('selectable');
+            td.dataset.row = rowIndex;
+            td.dataset.col = colIndex;
+          } else {
+            td.classList.add('bg-gray-100', 'text-gray-600', 'cursor-default');
+          }
+        });
+      });
+    }
+
+    // 读取localStorage中的选中数据，格式： [{row: 0, col: 1}, ...]
+    function loadSelectedCells() {
+      try {
+        const saved = localStorage.getItem('selectedCells');
+        if (!saved) return [];
+        return JSON.parse(saved);
+      } catch {
+        return [];
+      }
+    }
+
+    // 保存当前选中单元格数据到localStorage
+    function saveSelectedCells(selectedCells) {
+      localStorage.setItem('selectedCells', JSON.stringify(selectedCells));
+    }
+
+    // 重新渲染后恢复选中样式
+    function restoreSelectedCells() {
+      const selectedCells = loadSelectedCells();
+      selectedCells.forEach(({row, col}) => {
+        const td = document.querySelector(`#data-table tbody td.selectable[data-row="${row}"][data-col="${col}"]`);
+        if (td) {
+          td.classList.add('selected-cell');
+        }
+      });
+      updateTitleStats();
+    }
+
+    function updateTitleStats() {
+      const selectedCells = document.querySelectorAll('.selected-cell');
+      let selectedWeight = 0;
+      let totalWeight = 0;
+
+      tableData.rows.forEach((r) => {
+        r.forEach((c) => {
+          if (c.selectable) {
+            const w = c.w ?? 1;
+            totalWeight += w;
+          }
+        });
+      });
+
+      selectedCells.forEach((td) => {
+        const row = td.dataset.row;
+        const col = td.dataset.col;
+        const cellData = tableData.rows?.[row]?.[col];
+        const w = cellData?.w ?? 1;
+        selectedWeight += w;
+      });
+
+      const statsDiv = document.getElementById('title-stats');
+      statsDiv.textContent = `${tableData.title2 || '选中了'} ${selectedWeight}/${totalWeight} ${tableData.title3 || '项水果'}`;
+    }
+
+    renderTable();
+    restoreSelectedCells();
+
+    document.querySelector('#data-table tbody').addEventListener('click', (e) => {
+      const td = e.target.closest('td.selectable');
+      if (!td) return;
+
+      td.classList.toggle('selected-cell');
+
+      // 重新收集所有选中单元格
+      const selectedCells = Array.from(document.querySelectorAll('.selected-cell')).map(td => ({
+        row: parseInt(td.dataset.row),
+        col: parseInt(td.dataset.col)
+      }));
+
+      // 保存选中数据
+      saveSelectedCells(selectedCells);
+
+      updateTitleStats();
+    });
+
+    const bgColorInput = document.getElementById('bg-color-picker');
+    const textColorInput = document.getElementById('text-color-picker');
+    const resetBtn = document.getElementById('reset-colors');
+    const clearSelectionBtn = document.getElementById('clear-selection');
+
+    function updateSelectedColors() {
+      document.documentElement.style.setProperty('--selected-bg-color', selectedBgColor);
+      document.documentElement.style.setProperty('--selected-text-color', selectedTextColor);
+
+      // 保存颜色设置
+      localStorage.setItem('selectedBgColor', selectedBgColor);
+      localStorage.setItem('selectedTextColor', selectedTextColor);
+    }
+
+    bgColorInput.addEventListener('input', e => {
+      selectedBgColor = e.target.value;
+      updateSelectedColors();
+    });
+
+    textColorInput.addEventListener('input', e => {
+      selectedTextColor = e.target.value;
+      updateSelectedColors();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      selectedBgColor = "#C6E0B4";
+      selectedTextColor = "#000000";
+      bgColorInput.value = selectedBgColor;
+      textColorInput.value = selectedTextColor;
+      updateSelectedColors();
+    });
+
+    clearSelectionBtn.addEventListener('click', () => {
+      // 取消所有选中
+      document.querySelectorAll('.selected-cell').forEach(td => td.classList.remove('selected-cell'));
+
+      // 清空存储
+      localStorage.removeItem('selectedCells');
+
+      updateTitleStats();
+    });
+
+    // 页面加载时恢复颜色设置
+    window.addEventListener('load', () => {
+      const savedBg = localStorage.getItem('selectedBgColor');
+      const savedText = localStorage.getItem('selectedTextColor');
+      if (savedBg) {
+        selectedBgColor = savedBg;
+        bgColorInput.value = savedBg;
+      }
+      if (savedText) {
+        selectedTextColor = savedText;
+        textColorInput.value = savedText;
+      }
+      updateSelectedColors();
+    });
+
+    document.getElementById('screenshot-btn').addEventListener('click', () => {
+      const target = document.getElementById('table-container');
+      const originalShadow = target.style.boxShadow;
+      target.style.boxShadow = 'none';
+
+      html2canvas(target, { backgroundColor: '#fff', useCORS: true }).then(canvas => {
+        target.style.boxShadow = originalShadow;
+        canvas.toBlob(blob => {
+          if (!blob) return;
+          const link = document.createElement('a');
+          link.download = 'table-screenshot.png';
+          link.href = URL.createObjectURL(blob);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(link.href);
+        });
+      }).catch(err => {
+        console.error('截图失败:', err);
+      });
+    });
+  </script>
+</body>
+</html>

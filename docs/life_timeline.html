@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Life Progress Bar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-bold mb-4">Life Progress Bar (2022.7 - 2063.7)</h1>
+
+    <div class="mb-4 flex items-center gap-4">
+      <label for="mode" class="font-medium">Display Mode:</label>
+      <select id="mode" class="border p-2 rounded">
+        <option value="week">Weekly</option>
+        <option value="day">Daily</option>
+      </select>
+      <span id="progress" class="font-medium"></span>
+    </div>
+
+    <div id="grid" class="space-y-1 text-xs"></div>
+  </div>
+
+  <script>
+    const gridEl = document.getElementById("grid");
+    const modeEl = document.getElementById("mode");
+    const progressEl = document.getElementById("progress");
+
+    const startDate = new Date("2022-07-01");
+    const endDate = new Date("2063-07-31");
+    const now = new Date();
+
+    function generateGrid(mode) {
+      gridEl.innerHTML = "";
+      let unitMillis = 0;
+      let unitsPerRow = 0;
+
+      if (mode === "week") {
+        unitMillis = 7 * 24 * 60 * 60 * 1000;
+        unitsPerRow = 52;
+      } else if (mode === "day") {
+        unitMillis = 24 * 60 * 60 * 1000;
+        unitsPerRow = 60;
+      }
+
+      const totalUnits = Math.floor((endDate - startDate) / unitMillis);
+      const pastUnits = Math.floor((now - startDate) / unitMillis);
+      const percent = Math.min(100, Math.max(0, ((pastUnits / totalUnits) * 100).toFixed(2)));
+      progressEl.textContent = `Progress: ${percent}%`;
+
+      for (let row = 0; row * unitsPerRow <= totalUnits; row++) {
+        const rowEl = document.createElement("div");
+        rowEl.className = "flex gap-0.5";
+
+        for (let i = 0; i < unitsPerRow; i++) {
+          const index = row * unitsPerRow + i;
+          const unitDate = new Date(startDate.getTime() + index * unitMillis);
+          if (unitDate > endDate) break;
+
+          const isPast = unitDate < now;
+
+          const cell = document.createElement("div");
+          cell.title = unitDate.toISOString().split("T")[0];
+          cell.className = `w-4 h-4 ${isPast ? "bg-blue-500" : "bg-white"} border rounded`;
+
+          rowEl.appendChild(cell);
+        }
+
+        gridEl.appendChild(rowEl);
+      }
+    }
+
+    modeEl.addEventListener("change", () => generateGrid(modeEl.value));
+
+    // Default to weekly
+    generateGrid("week");
+  </script>
+</body>
+</html>
