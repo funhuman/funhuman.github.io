@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh" class="dark">
+<head>
+<meta charset="UTF-8">
+<title>常用词收录</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = { darkMode: 'class' };
+</script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
+<header class="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-white dark:bg-gray-800 shadow gap-2 md:gap-0">
+    <h1 class="text-lg font-bold">常用词收录</h1>
+    <div class="flex gap-2 items-center flex-wrap">
+        <input type="text" id="search-content" placeholder="搜索词或标题..."
+            class="px-3 py-1 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="text" id="search-tag" placeholder="搜索标签/关键词..."
+            class="px-3 py-1 rounded border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button id="theme-toggle" class="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-sm">🌞/🌙</button>
+    </div>
+</header>
+
+<main class="p-4">
+    <table id="word-table" class="w-full text-sm"></table>
+</main>
+
+<div id="toast" class="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow opacity-0 transition-opacity">已复制</div>
+
+<script src="/js/words.js"></script>
+<script>
+function loadData() {
+    let data = wordsData;
+    const table = document.getElementById('word-table');
+    const searchContent = document.getElementById('search-content');
+    const searchTag = document.getElementById('search-tag');
+    let expandedRow = null;
+
+    function renderList() {
+        const contentFilter = searchContent.value.trim().toLowerCase();
+        const tagFilter = searchTag.value.trim().toLowerCase();
+        table.innerHTML = '';
+
+        let filtered = data.filter(item => {
+            const contentFilter = searchContent.value.trim().toLowerCase();
+            const tagFilter = searchTag.value.trim().toLowerCase();
+
+            const contentMatch = !contentFilter || item.word.toLowerCase().includes(contentFilter)
+                                || (item.title && item.title.toLowerCase().includes(contentFilter));
+
+            const tagMatch = !tagFilter || item.keywords.some(k => k.toLowerCase().includes(tagFilter));
+
+            if (!contentFilter && !tagFilter) {
+                return true; // 都为空 → 显示全部
+            } else if (contentFilter && !tagFilter) {
+                return contentMatch; // 只有内容搜索 → 根据内容过滤
+            } else if (!contentFilter && tagFilter) {
+                return tagMatch; // 只有关键词搜索 → 根据关键词过滤
+            } else {
+                return contentMatch && tagMatch; // 两个都有 → AND
+            }
+        });
+
+
+        filtered.sort((a,b) => new Date(b.create_time) - new Date(a.create_time));
+
+        filtered.forEach(item => {
+            const row = document.createElement('tr');
+            row.className = "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors";
+            row.innerHTML = `
+                <td class="p-2 font-bold truncate max-w-xs">${item.word.length > 20 ? item.word.slice(0,20) + '…' : item.word}</td>
+                <td class="p-2 text-gray-500 dark:text-gray-400">${item.title || ''}</td>
+                <td class="p-2">
+                    ${item.keywords.slice(0,3).map(k => `<span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-2 py-0.5 rounded text-xs mr-1 cursor-pointer" onclick="document.getElementById('search-tag').value='${k}'; renderList();">${k}</span>`).join('')}
+                    ${item.keywords.length > 3 ? '…' : ''}
+                </td>
+            `;
+            row.addEventListener('click', () => toggleCard(item, row));
+            table.appendChild(row);
+        });
+    }
+
+    function toggleCard(item, row) {
+        if (expandedRow) {
+            expandedRow.nextSibling?.remove();
+            expandedRow = null;
+        }
+        if (expandedRow !== row) {
+            const cardRow = document.createElement('tr');
+            const cardCell = document.createElement('td');
+            cardCell.colSpan = 2;
+            cardCell.innerHTML = `
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mt-2">
+                    <div class="flex justify-between items-center">
+                        <strong class="text-lg">${item.word}</strong>
+                        <button class="copy-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">📋 复制</button>
+                    </div>
+                    ${item.title ? `<div class="text-gray-500 dark:text-gray-400 mt-1">${item.title}</div>` : ''}
+                    <div class="mt-2">
+                        ${item.keywords.map(k => `<span class="inline-block bg-blue-100 dark:bg-blue-700 text-blue-700 dark:text-blue-100 px-2 py-0.5 rounded text-xs mr-1 cursor-pointer" onclick="document.getElementById('search-tag').value='${k}'; renderList();">${k}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+            cardRow.appendChild(cardCell);
+            row.insertAdjacentElement('afterend', cardRow);
+            expandedRow = row;
+
+            cardCell.querySelector('.copy-btn').addEventListener('click', () => {
+                navigator.clipboard.writeText(item.word).then(showToast);
+            });
+        }
+    }
+
+    function showToast() {
+        const toast = document.getElementById('toast');
+        toast.classList.add('opacity-100');
+        setTimeout(() => toast.classList.remove('opacity-100'), 1500);
+    }
+
+    searchContent.addEventListener('input', renderList);
+    searchTag.addEventListener('input', renderList);
+
+    // 主题切换
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.remove('dark');
+    }
+
+    renderList();
+}
+
+loadData();
+</script>
+</body>
+</html>
