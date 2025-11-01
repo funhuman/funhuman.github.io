@@ -24,3 +24,7 @@ a:active {
 .container-fluid.main {
     padding: 0;
 }
+
+:root {
+    text-autospace: normal;
+}
