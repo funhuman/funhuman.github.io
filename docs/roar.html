@@ -21,7 +21,7 @@
       <label for="floatinginput">输入</label>
     </div>
     <div class="input-group mt-3">
-      <input id="dict" class="form-control" value="嗷呜啊~">
+      <input id="dict" class="form-control" value="嗷呜啊~" maxlength="4">
       <button id="encode-btn" class="btn btn-outline-secondary" onclick="defaultDict()">默认字典</button>
       <button id="encode-btn" class="btn btn-outline-secondary" onclick="clear()">清空</button>
       <button id="encode-btn" class="btn btn-outline-success" onclick="encodeClick()">编码</button>
@@ -52,7 +52,7 @@
     }
     function checkWarn(str) {
       warn.removeAttribute('hidden');
-      warnstr.value = str
+      warnstr.innerText = str
     }
     function inputCheck() {
       if (ipt.value.length == 0) {
