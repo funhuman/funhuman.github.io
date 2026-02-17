@@ -95,8 +95,8 @@
             let datediff = (day1, day2) => Math.ceil((day2 - day1) / (24 * 60 * 60 * 1000));
             let today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
             let date = (year, month, day) => new Date(year, month - 1, day);
-            let targetday = date(2025, 1, 28);
-            let nextTargetday = date(2026, 2, 16);
+            let targetday = date(2027, 2, 5);
+            let nextTargetday = date(2028, 1, 25);
             targetday = datediff(today, targetday) >= 0 ? targetday:  nextTargetday;
             let days = datediff(today, targetday) > 0 ? datediff(today, targetday) : 0;
             document.getElementById("zh-cn-number").innerHTML =

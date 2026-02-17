@@ -8,4 +8,8 @@ const wordsData = [
   { create_time: "2025-08-16", word: "吃饭去啊", keywords: ["对话数据集"], title: "" },
   { create_time: "2025-08-16", word: "我要看一集上海堡垒缓一下", keywords: ["对话数据集"], title: "" },
   { create_time: "2025-08-16", word: "等我问下副驾驶", keywords: ["对话数据集"], title: "" },
+  { create_time: "2026-02-17", word: "他不是知道错了，他只是知道自己要死了", keywords: ["对话数据集"], title: "" },
+  { create_time: "2026-02-17", word: "黄金越贵含金量越高", keywords: ["对话数据集"], title: "" },
+  { create_time: "2026-02-17", word: "我上大学的时候", keywords: ["对话数据集"], title: "" },
+  { create_time: "2026-02-17", word: "你听我的，兄弟不会害你，你这样，你搬到深圳或上海，再借遍亲朋好友的钱，银行又贷款分期整一套房，整个30w左右新能源车，炒点小股，轰轰烈烈办一场婚礼，婚后生三大胖小子，这日子不就好起来吗", keywords: ["对话数据集"], title: "" },
 ];
