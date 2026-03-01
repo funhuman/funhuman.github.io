@@ -21,7 +21,7 @@
   <input
     id="paramInput"
     class="w-full p-2 border rounded"
-    placeholder="可选：打开链接时替换 %s"
+    placeholder="参数（可选）：打开链接时替换 %s"
   />
 
   <!-- 添加 / 编辑 -->
@@ -33,9 +33,9 @@
 
   <div class="flex justify-between gap-2">
     <div>
-      <button id="exportBtn" class="px-3 py-2 bg-green-600 text-white rounded">导出数据</button>
-      <button id="importAppendBtn" class="px-3 py-2 bg-blue-600 text-white rounded">导入数据（追加）</button>
-      <button id="importBtn" class="px-3 py-2 bg-gray-400 text-white rounded cursor-not-allowed" disabled>导入数据（需先导出）</button>
+      <button id="exportBtn" class="px-3 py-2 bg-green-600 text-white rounded">导出</button>
+      <button id="importAppendBtn" class="px-3 py-2 bg-blue-600 text-white rounded">追加导入</button>
+      <button id="importBtn" class="px-3 py-2 bg-gray-400 text-white rounded cursor-not-allowed" disabled>覆盖导入</button>
       <input id="importFile" type="file" accept=".json" class="hidden" />
     </div>
     <div>
@@ -44,6 +44,7 @@
     </div>
   </div>
 
+  <div id="infoMessage" class="w-full text-center text-sm hidden mt-2 p-2 rounded-md"></div>
   <!-- 列表 -->
   <ul id="list" class="space-y-2"></ul>
   <div id="loadMore" class="text-center text-gray-500 py-4 hidden">下滑加载更多…</div>
@@ -93,6 +94,27 @@ const formatISO = ts => {
   return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`
 }
 const formatTime = ts => formatISO(ts).replace("T"," ")
+let timeoutId = null; // 用于保存定时器ID
+function showInfoMessage(type, message) {
+  const infoMessageElement = document.getElementById("infoMessage");
+  if (type === 1) {
+    infoMessageElement.className = "bg-green-100 text-green-800 border-l-4 border-green-500 p-2 rounded-md";
+  } else if (type === 2) {
+    infoMessageElement.className = "bg-red-100 text-red-800 border-l-4 border-red-500 p-2 rounded-md";
+  }
+  infoMessageElement.textContent = message;
+  infoMessageElement.classList.remove("hidden");
+  // 如果有正在运行的定时器，先清除
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+  }
+  // 10秒后自动隐藏提示信息
+  timeoutId = setTimeout(() => {
+    infoMessageElement.classList.add("hidden");
+  }, 10000);
+}
+function showSuccessMessage(message) {showInfoMessage(1, message)}
+function showFailMessage(message) {showInfoMessage(2, message)}
 
 /* ========= 导出 / 导入 ========= */
 exportBtn.onclick = () => {
@@ -124,7 +146,7 @@ function unlockImport() {
   importBtn.disabled = false
   importBtn.classList.remove("bg-gray-400","cursor-not-allowed")
   importBtn.classList.add("bg-orange-600")
-  importBtn.textContent = "导入数据（覆盖）"
+  importBtn.textContent = "覆盖导入"
   localStorage.setItem(EXPORTED_FLAG, "true");
 }
 
@@ -132,7 +154,7 @@ function lockImport() {
   importBtn.disabled = true
   importBtn.classList.remove("bg-orange-600")
   importBtn.classList.add("bg-gray-400","cursor-not-allowed")
-  importBtn.textContent = "导入数据（需先导出）"
+  importBtn.textContent = "覆盖导入（需先导出）"
   localStorage.setItem(EXPORTED_FLAG, "false");
 }
 
@@ -141,7 +163,7 @@ if(localStorage.getItem(EXPORTED_FLAG)==="true") unlockImport()
 /* ========= 导入（覆盖） ========= */
 importBtn.onclick = () => {
   if(localStorage.getItem(EXPORTED_FLAG) !== "true") {
-    alert("请先导出数据，再导入。");
+    showFailMessage("请先导出数据，再导入。");
     return;
   }
   importFile.dataset.mode = "overwrite"; // 设置为覆盖模式
@@ -150,10 +172,6 @@ importBtn.onclick = () => {
 
 /* ========= 导入（追加） ========= */
 importAppendBtn.onclick = () => {
-  if(localStorage.getItem(EXPORTED_FLAG) !== "true") {
-    alert("请先导出数据，再导入。");
-    return;
-  }
   importFile.dataset.mode = "append"; // 设置为追加模式
   importFile.click();
 }
@@ -202,9 +220,9 @@ importFile.onchange = e => {
       if (data.config && data.config.clickInterval) clickInterval = data.config.clickInterval;
       saveData();
       render();
-      alert("导入成功！");
+      showSuccessMessage("导入成功！");
     } catch (err) {
-      alert("导入失败：" + err);
+      showFailMessage("导入失败：" + err);
     }
   };
   reader.readAsText(file);
@@ -275,7 +293,7 @@ saveBtn.onclick = ()=>{
   const code = codeInput.value.trim()
   const title = titleInput.value.trim()
   const url = urlInput.value.trim()
-  if(!code||!title||!url) return alert("请填写完整")
+  if(!code||!title||!url) return showFailMessage("请填写完整")
   if(editing){
     Object.assign(editing,{code,title,url,updatedAt:Date.now()})
   } else {
