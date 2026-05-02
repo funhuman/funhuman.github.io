@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Clock</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background 0.3s, color 0.3s;
+}
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+}
+
+.clock {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  border: 3px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.clock-num {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-size: 22px;
+  font-family: "微软雅黑", sans-serif;
+  color: #666;
+}
+
+.big-word {
+  font-size: 30px;
+  font-weight: bold;
+  color: #000;
+}
+
+.hand {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform-origin: bottom center;
+  border-radius: 10px;
+}
+
+.hour {
+  width: 8px;
+  height: 90px;
+  background: #000;
+  margin-left: -4px;
+}
+
+.minute {
+  width: 6px;
+  height: 130px;
+  background: #666;
+  margin-left: -3px;
+}
+
+.second {
+  width: 3px;
+  height: 150px;
+  background: red;
+  margin-left: -1.5px;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  background: #000;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+#digitalTime {
+  font-size: 28px;
+  margin: 15px 0;
+  letter-spacing: 2px;
+  color: #000;
+}
+
+button {
+  padding: 10px 24px;
+  font-size: 15px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  background: #eee;
+  color: #000;
+  margin: 0 5px;
+}
+
+
+body.dark {
+  background: #000;
+}
+body.dark .clock {
+  border-color: #444;
+}
+body.dark .clock-num {
+  color: #aaa;
+}
+body.dark .big-word {
+  color: #fff;
+}
+body.dark .hour {
+  background: #fff;
+}
+body.dark .minute {
+  background: #ccc;
+}
+body.dark .center {
+  background: #fff;
+}
+body.dark button {
+  background: #333;
+  color: #fff;
+}
+
+body.dark #digitalTime {
+  color: #fff;
+}
+</style>
+</head>
+<body class="light">
+
+<div class="clock">
+  <div class="center"></div>
+  <div class="hand hour" id="hour"></div>
+  <div class="hand minute" id="minute"></div>
+  <div class="hand second" id="second"></div>
+</div>
+
+<div id="digitalTime"></div>
+
+<div class="btn-group">
+  <button id="modeBtn">Night Mode</button>
+  <button id="toggleTimeBtn">隐藏时间（按下空格显隐按钮）</button>
+</div>
+
+<script>
+
+const chars = ["胜","兵","必","骄","兵","必","败","兵","必","哀","兵","必"];
+const heavy = new Set(["胜","骄","败","哀"]);
+
+const clock = document.querySelector('.clock');
+
+
+for(let i = 0; i < 12; i++){
+  let div = document.createElement('div');
+  div.className = 'clock-num';
+  div.style.transform = `rotate(${i * 30}deg)`;
+  
+  let span = document.createElement('span');
+  span.innerText = chars[i];
+  span.style.display = `inline-block`;
+  span.style.transform = `rotate(${-i * 30}deg)`;
+  
+  if(heavy.has(chars[i])){
+    span.classList.add('big-word');
+  }
+  div.appendChild(span);
+  clock.appendChild(div);
+}
+
+const hourHand = document.getElementById('hour');
+const minHand = document.getElementById('minute');
+const secHand = document.getElementById('second');
+
+function setTime(){
+  let now = new Date();
+  let h = now.getHours() % 12;
+  let m = now.getMinutes();
+  let s = now.getSeconds();
+
+  let secDeg = s * 6;
+  let minDeg = m * 6 + s * 0.1;
+  let hourDeg = h * 30 + m * 0.5;
+
+  secHand.style.transform = `rotate(${secDeg}deg)`;
+  minHand.style.transform = `rotate(${minDeg}deg)`;
+  hourHand.style.transform = `rotate(${hourDeg}deg)`;
+}
+setTime();
+setInterval(setTime,1000);
+
+
+const modeBtn = document.getElementById('modeBtn');
+let isDark = false;
+modeBtn.onclick = () => {
+  isDark = !isDark;
+  document.body.classList.toggle('dark');
+  document.body.classList.toggle('light');
+  modeBtn.innerText = isDark ? 'Light Mode' : 'Night Mode';
+};
+
+
+const digitalTime = document.getElementById('digitalTime');
+function updateDigitalTime(){
+  let now = new Date();
+  let h = String(now.getHours()).padStart(2,'0');
+  let m = String(now.getMinutes()).padStart(2,'0');
+  let s = String(now.getSeconds()).padStart(2,'0');
+  digitalTime.innerText = `${h}:${m}:${s}`;
+}
+updateDigitalTime();
+setInterval(updateDigitalTime,1000);
+
+
+let timeShow = true;
+document.getElementById('toggleTimeBtn').onclick = function(){
+  timeShow = !timeShow;
+  digitalTime.style.display = timeShow ? 'block' : 'none';
+  this.innerText = (timeShow ? '隐藏时间' : '显示时间') + '（按下空格显隐按钮）';
+};
+
+
+let btnVisible = true;
+document.onkeydown = function(e){
+  if(e.code === 'Space'){
+    btnVisible = !btnVisible;
+    const btns = document.querySelectorAll('button');
+    btns.forEach(btn=>{
+      btn.style.display = btnVisible ? 'inline-block' : 'none';
+    });
+  }
+}
+</script>
+
+</body>
+</html>
