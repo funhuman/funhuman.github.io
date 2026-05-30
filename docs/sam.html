@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>SAM'S CLUB MEMBER VISA</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+body {
+font-family: Arial, "Microsoft YaHei", sans-serif;
+background: #f4f4f4;
+padding: 30px;
+}
+.wrap {
+max-width: 900px;
+margin: 0 auto;
+}
+/* 申请表单 */
+.form-box {
+background: #fff;
+padding: 30px;
+border: 2px solid #004792;
+border-radius: 8px;
+margin-bottom: 30px;
+}
+h1 {
+text-align: center;
+color: #004792;
+margin-bottom: 20px;
+font-size: 22px;
+}
+.form-row {
+display: flex;
+gap: 20px;
+margin: 15px 0;
+}
+.form-col {
+flex: 1;
+}
+label {
+display: block;
+margin-bottom: 5px;
+font-weight: bold;
+}
+input,
+select {
+width: 100%;
+padding: 8px;
+border: 1px solid #ccc;
+border-radius: 4px;
+}
+.btn-group {
+display: flex;
+gap: 15px;
+margin-top: 20px;
+}
+.btn {
+flex: 1;
+padding: 12px;
+border: none;
+border-radius: 4px;
+font-size: 16px;
+cursor: pointer;
+}
+.submit-btn {
+background: #004792;
+color: #fff;
+}
+.reset-btn {
+background: #666;
+color: #fff;
+}
+.upload-btn {
+margin-top: 8px;
+padding: 6px 12px;
+background: #004792;
+color: #fff;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+/* 滑动开关 */
+.check-group {
+margin: 20px 0;
+}
+.toggle-row {
+display: flex;
+align-items: center;
+margin: 12px 0;
+gap: 12px;
+}
+.toggle-text {
+font-size: 14px;
+}
+.switch {
+position: relative;
+display: inline-block;
+width: 50px;
+height: 24px;
+}
+.switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #ccc;
+transition: .3s;
+border-radius: 24px;
+}
+.slider:before {
+position: absolute;
+content: "";
+height: 18px;
+width: 18px;
+left: 3px;
+bottom: 3px;
+background-color: white;
+transition: .3s;
+border-radius: 50%;
+}
+input:checked+.slider {
+background-color: #004792;
+}
+input:checked+.slider:before {
+transform: translateX(26px);
+}
+.visa-card {
+background: #f0f2f5;
+border-radius: 12px;
+padding: 25px;
+position: relative;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+overflow: hidden;
+}
+.bg-pattern {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: 1;
+pointer-events: none;
+}
+/* 内容层级高于底纹 */
+.visa-card>div {
+position: relative;
+z-index: 2;
+}
+.visa-header {
+text-align: center;
+font-size: 32px;
+font-weight: bold;
+color: #004792;
+margin-bottom: 20px;
+}
+.visa-body {
+display: flex;
+gap: 20px;
+}
+.photo-area {
+width: 180px;
+height: 180px;
+background: #fff;
+border: 2px solid #004792;
+border-radius: 8px;
+display: flex;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+}
+#userImg {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+/* 三列字段布局 */
+.info-area {
+flex: 1;
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 10px;
+}
+.info-item {
+font-size: 14px;
+line-height: 1.6;
+}
+.info-item strong {
+color: #004792;
+font-size: 15px;
+display: block;
+}
+.sams-logo {
+position: absolute;
+top: 36%;
+right: 10%;
+width: 100px;
+height: 100px;
+background-color: #004792;
+transform: rotate(45deg);
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.sams-logo span {
+transform: rotate(-45deg);
+color: #fff;
+font-weight: bold;
+font-size: 22px;
+text-align: center;
+line-height: 1.2;
+}
+/* 品类图标区 */
+.permitted-areas {
+margin-top: 25px;
+display: flex;
+justify-content: space-around;
+text-align: center;
+font-size: 12px;
+flex-wrap: wrap;
+gap: 10px;
+padding-top: 15px;
+border-top: 1px solid #ccc;
+}
+.area-item {
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+.icon-box {
+width: 40px;
+height: 40px;
+display: flex;
+align-items: center;
+justify-content: center;
+color: #004792;
+font-size: 30px;
+margin-bottom: 5px;
+}
+.footer-text {
+text-align: center;
+margin-top: 20px;
+font-size: 20px;
+font-weight: bold;
+color: #004792;
+}
+.pdf-btn {
+display: block;
+width: 220px;
+margin: 20px auto;
+padding: 10px;
+background: #004792;
+color: #fff;
+border: none;
+border-radius: 4px;
+font-size: 15px;
+cursor: pointer;
+}
+.tip {
+text-align: center;
+margin-top: 15px;
+font-size: 12px;
+color: #999;
+}
+#visaCard {
+display: none;
+}
+#avatarInput {
+display: none;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<!-- 申请表单 -->
+<div class="form-box">
+<h1>SAM'S CLUB 会员签证申请</h1>
+<div class="form-row">
+<div class="form-col">
+<label>姓名 Name</label>
+<input type="text" id="name" placeholder="请输入姓名">
+</div>
+<div class="form-col">
+<label>申请地 Place of Issue</label>
+<input type="text" id="place" placeholder="如：Sam's Club China">
+</div>
+</div>
+<div class="form-row">
+<div class="form-col">
+<label>签发日期 Date of Issue</label>
+<input type="date" id="issueDate">
+</div>
+<div class="form-col">
+<label>有效期至 Date of Expiry</label>
+<input type="date" id="expiryDate">
+</div>
+</div>
+<div class="form-row">
+<div class="form-col">
+<label>会员起始日 Member Since</label>
+<input type="date" id="memberSince">
+</div>
+<div class="form-col">
+<label>上传头像</label>
+<label class="upload-btn" for="avatarInput">选择本地图片</label>
+<input type="file" id="avatarInput" accept="image/*">
+<div
+style="margin-top:10px; width:100px; height:100px; border:1px solid #ccc; border-radius:6px; overflow:hidden;">
+<img id="avatarImg" style="width:100%; height:100%; object-fit:cover;" src="" alt="预览">
+</div>
+</div>
+</div>
+<div class="check-group">
+<label style="font-size:15px;">准入条件（需全部开启）：</label>
+<div class="toggle-row">
+<label class="switch">
+<input type="checkbox" id="c1">
+<span class="slider"></span>
+</label>
+<span class="toggle-text">无蜜雪冰城消费记录</span>
+</div>
+<div class="toggle-row">
+<label class="switch">
+<input type="checkbox" id="c2">
+<span class="slider"></span>
+</label>
+<span class="toggle-text">无拼多多使用记录</span>
+</div>
+<div class="toggle-row">
+<label class="switch">
+<input type="checkbox" id="c3">
+<span class="slider"></span>
+</label>
+<span class="toggle-text">无华莱士/沙县消费记录</span>
+</div>
+<div class="toggle-row">
+<label class="switch">
+<input type="checkbox" id="c4">
+<span class="slider"></span>
+</label>
+<span class="toggle-text">未观看《哪吒》院线影片</span>
+</div>
+</div>
+<div class="btn-group">
+<button class="btn submit-btn" onclick="checkApply()">提交申请</button>
+<button class="btn reset-btn" onclick="resetPage()">重置表单</button>
+</div>
+</div>
+<div id="visaCard">
+<div class="visa-card" id="cardContent">
+<svg class="bg-pattern" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+<defs>
+<pattern id="linePattern" width="12" height="12" patternUnits="userSpaceOnUse"
+patternTransform="rotate(45)">
+<line x1="0" y1="0" x2="0" y2="12" stroke="#004792" stroke-width="2"
+stroke-opacity="0.05" />
+</pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#linePattern)" />
+</svg>
+<div class="visa-header">SAM'S CLUB MEMBER VISA</div>
+<div class="visa-body">
+<div class="photo-area">
+<img id="userImg" src="" alt="头像">
+</div>
+<div class="info-area">
+<div class="info-item">
+<strong>Place of Issue</strong>
+<span id="sPlace"></span>
+</div>
+<div class="info-item">
+<strong>Date of Issue</strong>
+<span id="sIssueDate"></span>
+</div>
+<div class="info-item">
+<strong>Date of Expiry</strong>
+<span id="sExpiryDate"></span>
+</div>
+<div class="info-item">
+<strong>Membership Type</strong>
+PLUS MEMBER
+</div>
+<div class="info-item">
+<strong>Entries</strong>
+MULTIPLE
+</div>
+<div class="info-item">
+</div>
+<div class="info-item">
+<strong>Valid for</strong>
+UNLIMITED SHOPPING
+</div>
+<div class="info-item">
+</div>
+<div class="info-item">
+</div>
+<div class="info-item">
+<strong>Name</strong>
+<span id="sName"></span>
+</div>
+<div class="info-item">
+<strong>No.</strong>
+<svg width="130" height="20" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="textGradient" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#ff0000" />
+<stop offset="100%" stop-color="#004792" />
+</linearGradient>
+</defs>
+<text x="0" y="15" font-size="14" font-weight="bold" fill="url(#textGradient)"
+id="svgGradText"></text>ƒ
+</svg>
+</div>
+</div>
+<div class="sams-logo">
+<span>Sam's<br>CLUB</span>
+</div>
+</div>
+<div class="permitted-areas">
+<div class="area-item">
+<div class="icon-box">🛒</div>
+<span>FRESH FOOD</span>
+</div>
+<div class="area-item">
+<div class="icon-box">🥤</div>
+<span>SNACKS</span>
+</div>
+<div class="area-item">
+<div class="icon-box">🥩</div>
+<span>BEEF</span>
+</div>
+<div class="area-item">
+<div class="icon-box">🧁</div>
+<span>BAKERY</span>
+</div>
+<div class="area-item">
+<div class="icon-box">🍶</div>
+<span>HOUSEHOLD</span>
+</div>
+<div class="area-item">
+<div class="icon-box">🖥️</div>
+<span>ELECTRONICS</span>
+</div>
+<div class="area-item">
+<div class="icon-box">👕</div>
+<span>APPAREL</span>
+</div>
+<div class="area-item">
+<div class="icon-box">•••</div>
+<span>AND MORE</span>
+</div>
+</div>
+<div class="footer-text">Save Money. Live Better.</div>
+</div>
+<button class="pdf-btn" onclick="exportPDF()">下载山姆签证 PDF</button>
+</div>
+<div class="tip">本内容为娱乐，与山姆无任何关联</div>
+</div>
+<script>
+// 头像上传预览
+const avatarInput = document.getElementById('avatarInput');
+const avatarImg = document.getElementById('avatarImg');
+const userImg = document.getElementById('userImg');
+avatarInput.onchange = function (e) {
+const file = e.target.files[0];
+if (!file) return;
+const reader = new FileReader();
+reader.onload = function (ev) {
+avatarImg.src = ev.target.result;
+userImg.src = ev.target.result;
+}
+reader.readAsDataURL(file);
+}
+function formatDate(dateStr) {
+if (!dateStr) return '';
+const date = new Date(dateStr);
+const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+const day = String(date.getDate()).padStart(2, '0');
+const month = months[date.getMonth()];
+const year = String(date.getFullYear()).slice(-2);
+return `${day} ${month} ${year}`;
+}
+function checkApply() {
+const name = document.getElementById('name').value || 'Anonymous';
+const place = document.getElementById('place').value || 'Sam\'s Club China';
+const issueDate = document.getElementById('issueDate').value || new Date().toISOString().split('T')[0];
+const expiryDate = document.getElementById('expiryDate').value || new Date(new Date(issueDate).setFullYear(new Date(issueDate).getFullYear() + 1) - 86400000).toISOString().split('T')[0];
+const memberSince = document.getElementById('memberSince').value || issueDate;
+const c1 = document.getElementById('c1').checked;
+const c2 = document.getElementById('c2').checked;
+const c3 = document.getElementById('c3').checked;
+const c4 = document.getElementById('c4').checked;
+if (c1 && c2 && c3 && c4) {
+document.getElementById('sName').innerText = name.toUpperCase();
+document.getElementById('sPlace').innerText = place;
+document.getElementById('sIssueDate').innerText = formatDate(issueDate);
+document.getElementById('sExpiryDate').innerText = formatDate(expiryDate);
+document.getElementById('svgGradText').textContent = getRandomCode();
+document.getElementById('visaCard').style.display = 'block';
+} else {
+alert('请将所有准入条件开关全部开启！');
+}
+}
+function resetPage() {
+document.getElementById('name').value = '';
+document.getElementById('place').value = '';
+document.getElementById('issueDate').value = '';
+document.getElementById('expiryDate').value = '';
+document.getElementById('memberSince').value = '';
+document.getElementById('c1').checked = false;
+document.getElementById('c2').checked = false;
+document.getElementById('c3').checked = false;
+document.getElementById('c4').checked = false;
+document.getElementById('userImg').src = '';
+document.getElementById('avatarInput').value = '';
+document.getElementById('avatarImg').src = '';
+document.getElementById('visaCard').style.display = 'none';
+}
+function exportPDF() {
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF('l', 'mm', 'a4');
+const target = document.getElementById('cardContent');
+html2canvas(target, {
+scale: 2,
+useCORS: true,
+allowTaint: true,
+backgroundColor: null
+}).then(canvas => {
+const imgData = canvas.toDataURL('image/png');
+doc.addImage(imgData, 'PNG', 10, 10, 277, canvas.height * 277 / canvas.width);
+doc.save('山姆会员签证.pdf');
+});
+}
+function getRandomCode() {
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+let code = '';
+for (let i = 0; i < 2; i++) {
+code += letters.charAt(Math.floor(Math.random() * letters.length));
+}
+code = "SC"
+for (let i = 0; i < 8; i++) {
+code += Math.floor(Math.random() * 10);
+}
+return code;
+}
+</script>
+</body>
+</html>
